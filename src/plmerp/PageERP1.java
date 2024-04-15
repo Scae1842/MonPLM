@@ -89,4 +89,8 @@ public class PageERP1 {
             Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public static void getVentes(String lienDuCSV){
+        
+        
+    }
 }
