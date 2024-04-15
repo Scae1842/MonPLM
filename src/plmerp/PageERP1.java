@@ -4,7 +4,10 @@
  */
 package plmerp;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -20,17 +23,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Pm
  */
 public class PageERP1 {
-    public static void PageERP1(){   
+    public static void PageERP1(){
+    
     }
     
     private HashMap<String, Integer> ventesSemaine = new HashMap<>();
-    public void setVentes(){
-        ventesSemaine.put("Mardi", 56);
-        ventesSemaine.put("Mercredi", 90);
-        ventesSemaine.put("Jeudi", 14);
-    }
     public static Object[][] ventesTableau = {{"Mardi", 56},{"Mercredi", 90},{"Jeudi", 14}};
     public static Object[] enteteTableau = {"JOUR", "QUANTITE"};
+    public String lienDuCSV = "C:/Users/Pm/Desktop/Code/Java/VentesduJour.csv";
+    
     public void shower(){
         for (Object e : ventesSemaine.keySet()){
             var f = ventesSemaine.get(e);
@@ -81,7 +82,7 @@ public class PageERP1 {
         ++ligneCompteur; 
         }
         try {
-            FileOutputStream f0 = new FileOutputStream("C:/Users/Pm/Desktop/Code/VentesduJour.xls");
+            FileOutputStream f0 = new FileOutputStream("C:/Users/Pm/Desktop/Code/Java/VentesduJour.xls");
             libreFile.write(f0);
             libreFile.close();
             f0.close();
@@ -89,7 +90,28 @@ public class PageERP1 {
             Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public static void getVentes(String lienDuCSV){
+    public void setVentes(){
+        ventesSemaine.put("Mardi", 56);
+        ventesSemaine.put("Mercredi", 90);
+        ventesSemaine.put("Jeudi", 14);
+    }
+    public void setVentes(String linkCSV){
+        File file = new File(linkCSV);
+        try {
+            file.createNewFile();
+        } catch (IOException ex) {
+            Logger.getLogger(PageERP1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //ventesSemaine.put(23);
+        try {
+            FileWriter writer = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(writer);
+            bw.write("Une information importante");
+            bw.close();
+            writer.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
         
         
     }
