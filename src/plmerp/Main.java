@@ -29,8 +29,8 @@ public class Main {
 
         
         // procedure : montrer un contenu de dictionnaire        
-//        monERP.setVentes();
-//        monERP.shower();
+        monERP.setVentes();
+        monERP.shower();
 //        
         //ouvre la page d'application
 //        PageAccueil page1 = new PageAccueil();
