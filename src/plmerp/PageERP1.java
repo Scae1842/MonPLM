@@ -4,11 +4,17 @@
  */
 package plmerp;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -22,6 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Pm
  */
+
 public class PageERP1 {
     public static void PageERP1(){
     
@@ -29,7 +36,8 @@ public class PageERP1 {
     
     private HashMap<String, Integer> ventesSemaine = new HashMap<>();
     public static Object[][] ventesTableau = {{"Mardi", 56},{"Mercredi", 90},{"Jeudi", 14}};
-    public static Object[] enteteTableau = {"JOUR", "QUANTITE"};
+    public static String[] enteteTableau = {"JOUR", "QUANTITE"};
+    
     public String lienDuCSV = "C:/Users/Pm/Desktop/Code/Java/VentesduJour.csv";
     
     public void shower(){
@@ -90,29 +98,58 @@ public class PageERP1 {
             Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     public void setVentes(){
         ventesSemaine.put("Mardi", 56);
         ventesSemaine.put("Mercredi", 90);
         ventesSemaine.put("Jeudi", 14);
     }
-    public void setVentes(String linkCSV){
-        File file = new File(linkCSV);
+    
+    @SuppressWarnings("unchecked")
+    public ArrayList<ArrayList<String>> getVentes(String linkCSV){
+        var tokenligne = new ArrayList<ArrayList<String>>();
         try {
-            file.createNewFile();
+            FileReader file = new FileReader(linkCSV);
+            try (BufferedReader reader = new BufferedReader(file)) {
+                String ligne = reader.readLine();
+                while(ligne!=null){
+                    ArrayList intermediaire = new ArrayList<String>();
+                    for(int i = 0; i < ligne.split(",").length; i++){
+                        intermediaire.add(ligne.split(",")[i]);
+                    }
+                    //System.out.println(intermediaire);
+                    tokenligne.add(intermediaire);
+                    //System.out.println(tokenligne);
+                    ligne = reader.readLine();
+                }
+            }
+        } catch(IOException e) {
+        }
+        return tokenligne;
+    }
+
+    public void createUnReport(ArrayList<ArrayList<String>> tableau){
+        XSSFWorkbook libreFile = new XSSFWorkbook();
+        XSSFSheet onglet = libreFile.createSheet();
+        
+        Row lignes;
+        Cell cel;
+        for(int i = 0; i < tableau.size(); i++){
+            lignes = onglet.createRow(i);            
+            for(int j = 0; j < (tableau.get(0)).size(); j++){
+                cel = lignes.createCell(j);
+                if((tableau.get(i)).get(j) instanceof String){
+                    cel.setCellValue((String) (tableau.get(i)).get(j));  
+                }
+            }
+        }
+        try {
+            FileOutputStream f0 = new FileOutputStream("C:/Users/Pm/Desktop/Code/Java/VentesduJour2.xls");
+            libreFile.write(f0);
+            libreFile.close();
+            f0.close();
         } catch (IOException ex) {
-            Logger.getLogger(PageERP1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ExcelManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //ventesSemaine.put(23);
-        try {
-            FileWriter writer = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(writer);
-            bw.write("Une information importante");
-            bw.close();
-            writer.close();
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-        
-        
     }
 }

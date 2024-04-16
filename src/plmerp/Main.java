@@ -5,6 +5,7 @@
 package plmerp;
 
 import interfacePackage.PageAccueil;
+import java.util.ArrayList;
 
 /**
  *
@@ -30,8 +31,14 @@ public class Main {
         
         // procedure : montrer un contenu de dictionnaire        
 //        monERP.setVentes();
-        monERP.setVentes(monERP.lienDuCSV);
-        monERP.shower();
+
+        var test123 = new ArrayList<ArrayList<String>>();
+        test123 = monERP.getVentes(monERP.lienDuCSV);
+        //System.out.println(test123);
+        
+        monERP.createUnReport(test123);
+        
+        //monERP.shower();
         
 //        
         //ouvre la page d'application
